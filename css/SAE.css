@@ -1,0 +1,155 @@
+/* CSS commun à tout le site, ne pas en faire un autre */
+
+body {
+    font-family: Arial;
+    background-color: beige;
+    margin: 0;
+}
+
+/* le titre en haut */
+header {
+    background-color: darkgreen;
+    color: white;
+    padding: 20px;
+    margin-top: 70px; /* sinon le menu cache le titre */
+}
+
+/* le menu reste en haut (demandé par le prof) */
+nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 30px;
+    background-color: darkgreen;
+}
+
+.logo {
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0;
+}
+
+/* les liens dans un cadre blanc arrondi */
+nav ul {
+    display: flex;
+    gap: 20px;
+    list-style-type: none;
+    margin: 0;
+    padding: 8px 25px;
+    background-color: white;
+    border-radius: 20px;
+}
+
+nav ul a {
+    color: darkgreen;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+nav ul a:hover {
+    text-decoration: underline;
+}
+
+/* bouton Rapport Web */
+.bouton-rapport {
+    color: white;
+    border: 2px solid white;
+    border-radius: 20px;
+    padding: 8px 15px;
+    text-decoration: none;
+}
+
+.bouton-rapport:hover {
+    background-color: white;
+    color: darkgreen;
+}
+
+/* le contenu des pages */
+main {
+    background-color: white;
+    margin: 20px;
+    padding: 20px;
+}
+
+h2 {
+    color: darkgreen;
+}
+
+/* les tableaux de résultats */
+table {
+    border-collapse: collapse;
+}
+
+th {
+    background-color: darkgreen;
+    color: white;
+    border: 1px solid black;
+    padding: 5px;
+}
+
+td {
+    border: 1px solid black;
+    padding: 5px;
+}
+
+/* les captures ne dépassent pas */
+img {
+    max-width: 100%;
+}
+
+footer {
+    text-align: center;
+}
+.equipe {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.membre {
+    background-color: beige;
+    border: 2px solid darkgreen;
+    padding: 15px 25px;
+    font-weight: bold;
+}
+
+/* blocs pour aller vers les autres pages */
+.parties {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.bloc {
+    background-color: darkgreen;
+    color: white;
+    padding: 20px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.bloc:hover {
+    background-color: green;
+}
+
+/* pied de page */
+footer {
+    background-color: darkgreen;
+    color: white;
+    padding: 15px;
+}
+
+footer a {
+    color: white;
+}
+/* les requetes SQL */
+pre {
+    background-color: lightgray;
+    padding: 10px;
+    border-radius: 10px;
+}

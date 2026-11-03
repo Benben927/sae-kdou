@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>La base - KDou</title>
+    <link rel="stylesheet" href="css/SAE.css">
+</head>
+<body>
+
+<!-- a copier sur toutes les pages -->
+<header>
+    <h1>SAE S1.04 - KDou</h1>
+</header>
+
+<!-- a copier sur toutes les pages -->
+
+<nav>
+    <p class="logo">KDou</p>
+    <ul>
+        <li><a href="index.html">Accueil</a></li>
+        <li><a href="base.html">Mission 1</a></li>
+        <li><a href="exploration.html">Mission 2</a></li>
+        <li><a href="indicateurs.html">Mission 3</a></li>
+        <li><a href="personnels.html">Mission 4</a></li>
+        <li><a href="conclusion.html">Bilan</a></li>
+    </ul>
+    <a class="bouton-rapport" href="rapport.html">Rapport Web</a>
+</nav>
+
+<!-- chacun change que cette partie -->
+<main>
+    <h2>Étape 1 : Etude de la base de données de KDou</h2>
+
+    <h3>Présentation de la base de données de KDou</h3>
+    <p>Un client peut passer plusieurs commandes. Chaque commande concerne 1 ou plusieurs produits. Les produits typiques commercialisés appartiennent à une seule catégorie alimentaire et sont proposés par un seul fournisseur. Quelques caractéristiques :</p>
+    <ul>
+        <li>KDou a mis en relation des clients ayant une proximité afin d'optimiser les opérations de livraison. Certains clients pilotent un réseau de clients partenaires pour faire des livraisons groupées.</li>
+        <li>La gestion des pays de KDou est organisée à partir d'une table des Pays.</li>
+        <li>Les produits ont un coût d'achat au fournisseur et par rapport à leur catégorie un coefficient de marge qui prend en compte les paramètres de l'organisation de KDou (coût fournisseur, transport, stockage, …). Le prix de vente au client est donc le coût d'achat * coefficient de marge.</li>
+    </ul>
+
+    <h3>Schéma des relations Access de la BDD KDou</h3>
+    <img src="images/schema.png" alt="Schéma des relations Access de la BDD KDou">
+
+    <h3>Les tables</h3>
+    <table>
+        <tr>
+            <th>Table</th>
+            <th>Ce qu'elle contient</th>
+            <th>Clé primaire</th>
+        </tr>
+        <tr>
+            <td>Clientele</td>
+            <td>Les clients de KDou</td>
+            <td>CodeCli</td>
+        </tr>
+        <tr>
+            <td>Commande</td>
+            <td>Les commandes des clients</td>
+            <td>N° commande</td>
+        </tr>
+        <tr>
+            <td>DetailCommande</td>
+            <td>Les produits de chaque commande</td>
+            <td>N° commande + Réf produit</td>
+        </tr>
+        <tr>
+            <td>Produit</td>
+            <td>Les produits du catalogue</td>
+            <td>RefProd</td>
+        </tr>
+        <tr>
+            <td>Categorie</td>
+            <td>Les catégories et leur coefficient de marge</td>
+            <td>CodeCateg</td>
+        </tr>
+        <tr>
+            <td>Fournisseur</td>
+            <td>Les fournisseurs</td>
+            <td>NoFour</td>
+        </tr>
+        <tr>
+            <td>Pays</td>
+            <td>Les pays et s'ils sont dans l'UE ou pas</td>
+            <td>NoPays</td>
+        </tr>
+    </table>
+</main>
+
+<!-- a copier sur toutes les pages -->
+<!-- a copier sur toutes les pages -->
+<footer>
+    <p>Ce site est le rapport collectif de la SAE S1.04 : on y présente notre travail sur la base de données de l'entreprise KDou.</p>
+    <p>
+        <a href="index.html">Accueil</a> -
+        <a href="base.html">Mission 1</a> -
+        <a href="exploration.html">Mission 2</a> -
+        <a href="indicateurs.html">Mission 3</a> -
+        <a href="personnels.html">Mission 4</a> -
+        <a href="conclusion.html">Bilan</a> -
+        <a href="rapport.html">Rapport Web</a>
+    </p>
+    <p>BUT Informatique - Roméo, Carlos, Anes et Benamer</p>
+</footer>
+
+</body>
+</html>

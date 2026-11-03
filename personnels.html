@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Mission 4 - KDou</title>
+    <link rel="stylesheet" href="css/SAE.css">
+</head>
+<body>
+
+<!-- a copier sur toutes les pages -->
+<header>
+    <h1>SAE S1.04 - KDou</h1>
+</header>
+
+<!-- a copier sur toutes les pages -->
+<nav>
+    <p class="logo">KDou</p>
+    <ul>
+        <li><a href="index.html">Accueil</a></li>
+        <li><a href="base.html">Mission 1</a></li>
+        <li><a href="exploration.html">Mission 2</a></li>
+        <li><a href="indicateurs.html">Mission 3</a></li>
+        <li><a href="personnels.html">Mission 4</a></li>
+        <li><a href="conclusion.html">Bilan</a></li>
+    </ul>
+    <a class="bouton-rapport" href="rapport.html">Rapport Web</a>
+</nav>
+
+<!-- chacun change que cette partie -->
+<main>
+    <h2>Proposition d'indicateurs (requêtes)</h2>
+    <p>Chaque membre de l'équipe propose 1 requête intéressante de son point de vue pour la problématique de KDou : respect de l'environnement, optimisation de son offre, ….</p>
+
+    <!-- indicateur de Benamer -->
+    <h3>Indicateur de Benamer : d'où viennent les produits du catalogue</h3>
+
+    <p><strong>Énoncé de la requête en langage naturel avec son objectif.</strong></p>
+    <p>Je voulais savoir combien de produits du catalogue viennent de chaque pays, pour voir quelle part des produits est française, européenne ou vient de loin.</p>
+
+    <p><strong>Intérêt de la requête dans le contexte.</strong></p>
+    <p>Un produit qui vient de l'autre bout du monde fait des milliers de kilomètres avant d'arriver, et ça pollue beaucoup. Si KDou sait d'où viennent ses produits, elle peut choisir plus de fournisseurs français ou européens et avoir une meilleure image écologique.</p>
+
+    <p><strong>Requête en SQL et explication de sa conception.</strong></p>
+    <p>Étape 1 : nombre de produits par pays.</p>
+    <pre>
+SELECT Y.PaysFR, Y.UE, Count(*) AS NbProduits
+FROM (Produit AS P INNER JOIN Fournisseur AS F ON P.NoFour = F.NoFour)
+INNER JOIN Pays AS Y ON F.NoPays = Y.NoPays
+GROUP BY Y.PaysFR, Y.UE
+ORDER BY 3 DESC, 1;
+</pre>
+    <p>Dans la table Produit, il n'y a pas le pays. J'ai donc fait une jointure avec Fournisseur, puis une autre avec Pays pour récupérer le pays du fournisseur. J'ai fait un GROUP BY sur le pays pour avoir un groupe par pays. J'ai aussi mis la colonne UE dans le GROUP BY pour pouvoir l'afficher. Le Count(*) compte le nombre de produits dans chaque groupe. J'ai trié avec ORDER BY 3 DESC pour avoir en premier les pays qui ont le plus de produits, puis par ordre alphabétique quand il y a égalité.</p>
+    <p>Étape 2 : UE ou hors UE.</p>
+    <pre>
+SELECT Y.UE, Count(*) AS NbProduits
+FROM (Produit AS P INNER JOIN Fournisseur AS F ON P.NoFour = F.NoFour)
+INNER JOIN Pays AS Y ON F.NoPays = Y.NoPays
+GROUP BY Y.UE;
+</pre>
+    <p>Pour que ce soit plus clair, j'ai refait la requête en regroupant juste avec la colonne UE (Membre ou Hors).</p>
+
+    <p><strong>Résultat pertinent et lisible par les associés de KDou.</strong></p>
+    <img src="images/3%20resultat.png" alt="Résultat de l'indicateur : produits par pays">
+    <table>
+        <tr>
+            <th>Provenance</th>
+            <th>Nombre de produits</th>
+            <th>Part</th>
+        </tr>
+        <tr>
+            <td>France</td>
+            <td>11</td>
+            <td>10 %</td>
+        </tr>
+        <tr>
+            <td>Autres pays de l'UE</td>
+            <td>36</td>
+            <td>33 %</td>
+        </tr>
+        <tr>
+            <td>Hors UE</td>
+            <td>62</td>
+            <td>57 %</td>
+        </tr>
+    </table>
+    <p>Au final, sur les 109 produits, 11 viennent de France (10 %), 36 d'un autre pays de l'UE (33 %) et 62 d'un pays hors UE (57 %).</p>
+    <p>Plus de la moitié des produits viennent de pays hors UE, et certains de très loin comme l'Australie, le Japon, le Brésil ou Singapour. Il n'y a que 10 % de produits français, alors que tous les clients de KDou sont en France.</p>
+    <p>Mon indicateur a quand même une limite : il compte les produits mais pas les quantités vendues. Un produit lointain qui est très peu commandé pollue moins qu'un produit très vendu.</p>
+
+    <!-- indicateur de Roméo -->
+    <h3>Indicateur de Roméo : les produits jamais commandés</h3>
+
+    <p><strong>Énoncé de la requête en langage naturel avec son objectif.</strong></p>
+    <p>Identifier tous les produits présents dans le catalogue de KDou qui n'ont jamais été commandés par les clients.</p>
+
+    <p><strong>Intérêt de la requête dans le contexte.</strong></p>
+    <p>Cet indicateur permet à KDou de repérer les produits qui ne rencontrent aucun succès commercial. L'entreprise peut alors décider de mieux les promouvoir, de revoir leur prix ou de ne plus les proposer. Cela permettrait de mieux gérer son catalogue, de limiter les achats inutiles et de réduire le risque de gaspillage alimentaire.</p>
+
+    <p><strong>Requête en SQL et explication de sa conception.</strong></p>
+    <pre>
+SELECT P.RefProd, P.NomProd, C.NomCateg, P.CoutAchat
+FROM Produit AS P INNER JOIN Categorie AS C ON P.CodeCateg = C.CodeCateg
+WHERE NOT EXISTS (
+SELECT *
+FROM DetailCommande AS D
+WHERE D.[Réf produit] = P.RefProd
+)
+ORDER BY C.NomCateg, P.NomProd;
+</pre>
+    <p>  <ul>
+    <li>SELECT : sélectionne la référence, le nom, la catégorie et le coût d'achat des produits.</li>
+    <li>FROM Produit AS P INNER JOIN Categorie AS C : récupère les informations dans la table des produits, reliée à la table des catégories pour avoir le nom de la catégorie.</li>
+    <li>NOT EXISTS : vérifie qu'aucune commande ne contient le produit concerné.</li>
+    <li>DetailCommande : contient les produits associés aux commandes.</li>
+    <li>[Réf produit] : le nom de la colonne est entre crochets car il contient un espace et un accent.</li>
+    <li>ORDER BY C.NomCateg, P.NomProd : classe les résultats par catégorie, puis par ordre alphabétique.</li>
+</ul>
+    </p>
+
+    <p><strong>Résultat pertinent et lisible par les associés de KDou.</strong></p>
+    <img src="images/Roméo%20resultat.png" alt="Résultat de l'indicateur de Roméo : produits jamais commandés">
+    <p>Le résultat affichera tous les produits qui n'apparaissent jamais dans les détails des commandes. Si la requête ne retourne aucun résultat, cela signifie que tous les produits du catalogue ont été commandés au moins une fois.</p>
+
+    <!-- indicateur de Carlos : à compléter -->
+    <h3>Indicateur de Carlos</h3>
+    <p><strong>Énoncé de la requête en langage naturel avec son objectif.</strong></p>
+    <p>À compléter</p>
+    <p><strong>Intérêt de la requête dans le contexte.</strong></p>
+    <p>À compléter</p>
+    <p><strong>Requête en SQL et explication de sa conception.</strong></p>
+    <p>À compléter</p>
+    <p><strong>Résultat pertinent et lisible par les associés de KDou.</strong></p>
+    <p>À compléter</p>
+
+    <!-- indicateur d'Anes : à compléter -->
+    <h3>Indicateur d'Anes</h3>
+    <p><strong>Énoncé de la requête en langage naturel avec son objectif.</strong></p>
+    <p>À compléter</p>
+    <p><strong>Intérêt de la requête dans le contexte.</strong></p>
+    <p>À compléter</p>
+    <p><strong>Requête en SQL et explication de sa conception.</strong></p>
+    <p>À compléter</p>
+    <p><strong>Résultat pertinent et lisible par les associés de KDou.</strong></p>
+    <p>À compléter</p>
+</main>
+
+<!-- a copier sur toutes les pages -->
+<footer>
+    <p>Ce site est le rapport collectif de la SAE S1.04 : on y présente notre travail sur la base de données de l'entreprise KDou.</p>
+    <p>
+        <a href="index.html">Accueil</a> -
+        <a href="base.html">Mission 1</a> -
+        <a href="exploration.html">Mission 2</a> -
+        <a href="indicateurs.html">Mission 3</a> -
+        <a href="personnels.html">Mission 4</a> -
+        <a href="conclusion.html">Bilan</a> -
+        <a href="rapport.html">Rapport Web</a>
+    </p>
+    <p>BUT Informatique - Roméo, Carlos, Anes et Benamer</p>
+</footer>
+
+</body>
+</html>

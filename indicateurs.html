@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Mission 3 - KDou</title>
+    <link rel="stylesheet" href="css/SAE.css">
+</head>
+<body>
+
+<!-- a copier sur toutes les pages -->
+<header>
+    <h1>SAE S1.04 - KDou</h1>
+</header>
+
+<!-- a copier sur toutes les pages -->
+<nav>
+    <p class="logo">KDou</p>
+    <ul>
+        <li><a href="index.html">Accueil</a></li>
+        <li><a href="base.html">Mission 1</a></li>
+        <li><a href="exploration.html">Mission 2</a></li>
+        <li><a href="indicateurs.html">Mission 3</a></li>
+        <li><a href="personnels.html">Mission 4</a></li>
+        <li><a href="conclusion.html">Bilan</a></li>
+    </ul>
+    <a class="bouton-rapport" href="rapport.html">Rapport Web</a>
+</nav>
+
+<!-- chacun change que cette partie -->
+<main>
+    <h2>Les requêtes/indicateurs de 2 à 5</h2>
+
+    <!-- question 2 : Anes, à compléter -->
+    <h3>2) Dans une réflexion en lien avec l'origine de ses produits : On veut comme indicateur le CA total généré à ce jour avec les fournisseurs de l'UE ?</h3>
+    <p>À compléter</p>
+
+    <!-- question 3 : Benamer -->
+    <h3>3) Dans une réflexion en lien avec la santé : On veut comme indicateur le chiffre d'affaire généré (montant total des ventes) annuel pour les catégories desserts ou boissons.</h3>
+    <p>Pour calculer le chiffre d'affaires d'une ligne de commande, on fait : quantité × coût d'achat × coefficient de marge × (1 − remise).</p>
+    <p>Il y a des lignes en double dans DetailCommande. On les enlève d'abord avec une première requête, enregistrée sous le nom DetailSansDoublon :</p>
+    <img src="images/2.3%20DetailSansDoublon.png" alt="Requête DetailSansDoublon dans Access">
+    <p>On passe de 2 704 lignes à 2 697 : les 7 doublons sont enlevés.</p>
+    <p>Ensuite on calcule le chiffre d'affaires :</p>
+    <img src="images/2.3%20requete.png" alt="Requête du calcul du CA desserts et boissons dans Access">
+    <p>On a fait les jointures entre DetailSansDoublon, Commande, Produit et Categorie, puis on a gardé seulement les desserts et les boissons avec IN. On a additionné avec Sum et regroupé par année et par catégorie avec GROUP BY.</p>
+    <img src="images/2.3%20resultat.png" alt="Résultat du CA annuel desserts et boissons">
+    <p>En 2021, les boissons font environ 913 374 € et les desserts 491 935 €, donc presque un tiers du CA total. Les boissons rapportent presque deux fois plus que les desserts. Il faut faire attention : 2021 est la seule année complète, car 2020 commence en juillet et 2022 n'a que 5 commandes.</p>
+
+    <!-- question 4 : Carlos, à compléter -->
+    <h3>4) Dans une réflexion en lien avec l'offre commerciale : Calcul de l'indicateur nombre de produits carnés non commandés actuellement ?</h3>
+    <p>À compléter</p>
+
+    <!-- question 5 : Roméo, à compléter -->
+    <h3>5) Dans une réflexion sur le partenariat client : A-t-on des clients pilotes d'un réseau partenaire ayant autant de commandes que les clients partenaires ?</h3>
+    <p>À compléter</p>
+</main>
+
+<!-- a copier sur toutes les pages -->
+<footer>
+    <p>Ce site est le rapport collectif de la SAE S1.04 : on y présente notre travail sur la base de données de l'entreprise KDou.</p>
+    <p>
+        <a href="index.html">Accueil</a> -
+        <a href="base.html">Mission 1</a> -
+        <a href="exploration.html">Mission 2</a> -
+        <a href="indicateurs.html">Mission 3</a> -
+        <a href="personnels.html">Mission 4</a> -
+        <a href="conclusion.html">Bilan</a> -
+        <a href="rapport.html">Rapport Web</a>
+    </p>
+    <p>BUT Informatique - Roméo, Carlos, Anes et Benamer</p>
+</footer>
+
+</body>
+</html>

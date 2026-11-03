@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Exploration - KDou</title>
+    <link rel="stylesheet" href="css/SAE.css">
+</head>
+<body>
+
+<!-- a copier sur toutes les pages -->
+<header>
+    <h1>SAE S1.04 - KDou</h1>
+</header>
+
+<!-- a copier sur toutes les pages -->
+
+<nav>
+    <p class="logo">KDou</p>
+    <ul>
+        <li><a href="index.html">Accueil</a></li>
+        <li><a href="base.html">Mission 1</a></li>
+        <li><a href="exploration.html">Mission 2</a></li>
+        <li><a href="indicateurs.html">Mission 3</a></li>
+        <li><a href="personnels.html">Mission 4</a></li>
+        <li><a href="conclusion.html">Bilan</a></li>
+    </ul>
+    <a class="bouton-rapport" href="rapport.html">Rapport Web</a>
+</nav>
+
+<!-- chacun change que cette partie -->
+<main>
+    <h2>1) Une première exploration des données</h2>
+
+    <h3>a. On veut vérifier les coordonnées des clients parisiens : liste triée par société.</h3>
+    <pre>
+SELECT Societe, Contact, Adresse, CodePostal, Ville, Tel, MailCli
+FROM Clientele
+WHERE Ville = "Paris" OR CodePostal LIKE "75*"
+ORDER BY Societe;
+</pre>
+    <img src="images/sae/1.a%20resultat.png" alt="Résultat de la requête 2.1 a">
+    <p>On a pris les clients dont la ville est Paris ou dont le code postal commence par 75 (avec LIKE "75*"), et on a trié par société avec ORDER BY. On a mis les deux conditions avec un OR pour repérer les clients qui sont mal saisis.</p>
+    <p>On trouve 5 clients. Mais Le Gourmet a Paris comme ville avec le code postal 76001, qui n'est pas un code de Paris, et il a le même mail que La Parisienne. Un autre client a aussi écrit « paris » en minuscule.</p>
+
+    <h3>b. Quels sont les produits de provenance des Etats-Unis avec un cout de moins de 25€ ? On veut les connaître noms et prix, nom du fournisseur et ville.</h3>
+    <pre>
+SELECT P.NomProd, P.CoutAchat, P.CoutAchat * C.CoefMarge AS PrixVente, F.Societe, F.Ville
+FROM ((Produit AS P INNER JOIN Fournisseur AS F ON P.NoFour = F.NoFour)
+INNER JOIN Pays AS Y ON F.NoPays = Y.NoPays)
+INNER JOIN Categorie AS C ON P.CodeCateg = C.CodeCateg
+WHERE Y.PaysFR = "Etats-Unis" AND P.CoutAchat &lt; 25
+ORDER BY P.NomProd;
+</pre>
+    <img src="images/sae/1.b%20resultat.png" alt="Résultat de la requête 2.1 b">
+    <p>On trouve 8 produits, par exemple Boston Crab Meat (prix de vente 29,13 €) et Sasquatch Ale (29,17 €).</p>
+
+    <h3>c. Quels sont les produits (avec fournisseur et pays de provenance) de catégorie viandes ou poissons ayant un coût d'achat de plus de 50€ ?</h3>
+    <pre>
+SELECT P.NomProd, C.NomCateg, P.CoutAchat, F.Societe, Y.PaysFR
+FROM ((Produit AS P INNER JOIN Fournisseur AS F ON P.NoFour = F.NoFour)
+INNER JOIN Pays AS Y ON F.NoPays = Y.NoPays)
+INNER JOIN Categorie AS C ON P.CodeCateg = C.CodeCateg
+WHERE C.NomCateg IN ("Viandes", "Poissons et fruits de mer") AND P.CoutAchat &gt; 50
+ORDER BY C.NomCateg, P.CoutAchat DESC;
+</pre>
+    <img src="images/sae/1.c%20resultat.png" alt="Résultat de la requête 2.1 c">
+    <p>On trouve 7 produits. Le plus cher est Dea Surströmming (120 €, Suède).</p>
+
+    <h3>d. Quels fournisseurs proposent de la viande ou du poisson ?</h3>
+    <pre>
+SELECT DISTINCT F.NoFour, F.Societe
+FROM Fournisseur AS F INNER JOIN Produit AS P ON F.NoFour = P.NoFour
+WHERE P.CodeCateg IN (6, 8)
+ORDER BY F.Societe;
+</pre>
+    <img src="images/sae/1.d%20resultat.png" alt="Résultat de la requête 2.1 d">
+    <p>On trouve 15 fournisseurs. Le DISTINCT sert à ne pas avoir le même fournisseur plusieurs fois.</p>
+
+    <h3>e. Quels fournisseurs proposent de la viande et du poisson ?</h3>
+    <pre>
+SELECT NoFour, Societe
+FROM Fournisseur
+WHERE NoFour IN (SELECT NoFour FROM Produit WHERE CodeCateg = 6)
+AND NoFour IN (SELECT NoFour FROM Produit WHERE CodeCateg = 8);
+</pre>
+    <img src="images/sae/1.e%20resultat.png" alt="Résultat de la requête 2.1 e">
+    <p>Un produit n'a qu'une seule catégorie, donc on ne peut pas mettre les deux conditions sur la même ligne. On a pris les fournisseurs dont le numéro est dans la liste de ceux qui ont un produit de catégorie 6 (Viandes) et aussi dans la liste de ceux qui ont un produit de catégorie 8 (Poissons), avec deux sous-requêtes IN. Ça revient à faire une intersection, parce qu'Access ne connaît pas INTERSECT.</p>
+    <p>On trouve 2 fournisseurs : Sakura Imports et Moines de Paris. Mais le « poisson » de Moines de Paris, c'est le Cidre brut de Saint Lô, qui est mal classé. En vrai, il n'y a que Sakura Imports qui vend de la viande et du poisson.</p>
+
+    <h3>f. Quels sont les produits conditionnés dans du carton ou dans du verre ?</h3>
+    <pre>
+SELECT NomProd, QteParUnit
+FROM Produit
+WHERE QteParUnit LIKE "*carton*" OR QteParUnit LIKE "*verre*"
+ORDER BY NomProd;
+</pre>
+    <img src="images/sae/1.f%20resultat.png" alt="Résultat de la requête 2.1 f">
+    <p>On trouve 26 produits, dont 3 en verre.</p>
+
+    <h3>g. Donner les 3 dernières commandes du client Max Deschamps ?</h3>
+    <pre>
+SELECT TOP 3 C.[N° commande], C.DateCde, C.dateEnv, Cl.Societe
+FROM Commande AS C INNER JOIN Clientele AS Cl ON C.CodeCli = Cl.CodeCli
+WHERE Cl.Contact = "Max Deschamps"
+ORDER BY C.DateCde DESC;
+</pre>
+    <img src="images/sae/1.g%20resultat.png" alt="Résultat de la requête 2.1 g">
+    <p>On a fait une jointure entre Commande et Clientele pour retrouver le client avec son nom. On a filtré sur "Max Deschamps" en entier, parce qu'il y a aussi un Jean Deschamps. Ensuite on a trié par date de commande de la plus récente à la plus ancienne avec ORDER BY DateCde DESC, et on a gardé les 3 premières avec TOP 3.</p>
+    <p>Il fallait trier par date et pas par numéro, parce que la 10298 est plus récente que la 10610 alors que son numéro est plus petit.</p>
+
+    <h3>h. Quels fournisseurs ne proposent que des desserts ?</h3>
+    <pre>
+SELECT NoFour, Societe
+FROM Fournisseur
+WHERE NoFour IN (SELECT NoFour FROM Produit WHERE CodeCateg = 3)
+AND NoFour NOT IN (SELECT NoFour FROM Produit WHERE CodeCateg &lt;&gt; 3);
+</pre>
+    <img src="images/sae/1.h%20resultat.png" alt="Résultat de la requête 2.1 h">
+    <p>« Que des desserts », ça veut dire que le fournisseur a au moins un dessert et aucun produit d'une autre catégorie. On a donc mis NoFour IN (les fournisseurs qui ont un dessert) AND NoFour NOT IN (les fournisseurs qui ont un produit qui n'est pas un dessert). Le NOT IN fait la différence entre les deux listes.</p>
+    <p>On trouve 4 fournisseurs : Baker's Treats Ltd., Nordlicht Feinkost GmbH, Tulip &amp; Co. Delicacies et Holland Zoetgoed BV.</p>
+
+    <h3>i. Quels fournisseurs hors France n'ont pas encore de produits au catalogue de Kdou ?</h3>
+    <pre>
+SELECT F.NoFour, F.Societe, Y.PaysFR
+FROM Fournisseur AS F INNER JOIN Pays AS Y ON F.NoPays = Y.NoPays
+WHERE Y.PaysFR &lt;&gt; "France"
+AND F.NoFour NOT IN (SELECT NoFour FROM Produit)
+ORDER BY F.Societe;
+</pre>
+    <img src="images/sae/1.i%20resultat.png" alt="Résultat de la requête 2.1 i">
+    <p>On trouve 2 fournisseurs : Pacific United Traders (Australie) et Sabor do Sul (Brésil).</p>
+
+    <h3>j. Pour optimiser les livraisons, on veut savoir quels couples de clients sont situés à Paris.</h3>
+    <pre>
+SELECT C1.Societe AS Client1, C2.Societe AS Client2
+FROM Clientele AS C1 INNER JOIN Clientele AS C2 ON C1.CodeCli &lt; C2.CodeCli
+WHERE C1.CodePostal LIKE "75*" AND C2.CodePostal LIKE "75*"
+ORDER BY 1, 2;
+</pre>
+    <img src="images/sae/1.j%20resultat.png" alt="Résultat de la requête 2.1 j">
+    <p>On a utilisé deux fois la table Clientele avec deux alias, C1 et C2, et on les a jointes avec C1.CodeCli &lt; C2.CodeCli. Le &lt; sert à ne pas avoir un client avec lui-même, et à ne pas avoir le même couple deux fois (A-B et B-A). On a filtré avec le code postal en 75 pour ne pas compter Le Gourmet.</p>
+    <p>On trouve 6 couples entre Chez Bouxou, ChefFamilla, La Parisienne et Une petite faim.</p>
+</main>
+
+<!-- a copier sur toutes les pages -->
+<!-- a copier sur toutes les pages -->
+<footer>
+    <p>Ce site est le rapport collectif de la SAE S1.04 : on y présente notre travail sur la base de données de l'entreprise KDou.</p>
+    <p>
+        <a href="index.html">Accueil</a> -
+        <a href="base.html">Mission 1</a> -
+        <a href="exploration.html">Mission 2</a> -
+        <a href="indicateurs.html">Mission 3</a> -
+        <a href="personnels.html">Mission 4</a> -
+        <a href="conclusion.html">Bilan</a> -
+        <a href="rapport.html">Rapport Web</a>
+    </p>
+    <p>BUT Informatique - Roméo, Carlos, Anes et Benamer</p>
+</footer>
+
+</body>
+</html>
