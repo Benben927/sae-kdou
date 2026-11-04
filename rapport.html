@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Bilan - KDou</title>
+    <title>Rapport Web - KDou</title>
     <link rel="stylesheet" href="css/SAE.css">
 </head>
 <body>
@@ -28,40 +28,53 @@
 
 <!-- chacun change que cette partie -->
 <main>
-    <h2>Bilan</h2>
+    <h2>Rapport Web</h2>
 
-    <h3>Ce que nos requêtes montrent</h3>
+    <h3>L'organisation des fichiers</h3>
+    <pre>
+sae-kdou/
+    index.html
+    base.html
+    exploration.html
+    indicateurs.html
+    personnels.html
+    conclusion.html
+    rapport.html
+    css/
+        SAE.css
+    images/
+        sae/
+</pre>
     <ul>
-        <li>Le CA réalisé avec les fournisseurs de l'UE est d'environ 2 752 344 €, soit 55,5 % du CA total.</li>
-        <li>En 2021, les boissons et les desserts représentent presque un tiers du chiffre d'affaires, et les boissons rapportent presque deux fois plus que les desserts.</li>
-        <li>2 produits carnés ne sont actuellement pas commandés : la Terrine Andouilloux et le Pâté de campagne au Pommeau.</li>
-        <li>Un seul client pilote a autant de commandes que son partenaire : Le Nostradamu et Petite Épicerie, avec 17 commandes chacun.</li>
-        <li>Plus de la moitié des produits du catalogue viennent de pays hors UE, et seulement 10 % viennent de France.</li>
-        <li>54 % des quantités vendues viennent de fournisseurs hors UE. Les produits hors UE les plus vendus sont surtout des boissons et des desserts (Guaraná Fantástica, Pavlova, Chang…).</li>
-        <li>32 produits sur 109 n'ont jamais été commandés, dont 23 boissons.</li>
-        <li>Savannah Bay Spices Co. est le fournisseur qui propose le plus de produits (10 produits).</li>
+        <li>Toutes les pages HTML sont à la racine. Le site est petit, donc les liens entre les pages restent simples, par exemple href="base.html".</li>
+        <li>Il y a une page par partie du sujet, comme ça on retrouve facilement chaque mission.</li>
+        <li>Il n'y a qu'un seul fichier CSS, dans le dossier css. Toutes les pages ont donc la même charte graphique, et pour changer une couleur il suffit de la modifier à un seul endroit.</li>
+        <li>Les images sont dans le dossier images, pour les séparer du code. Les captures de la question 2.1 sont rangées dans le sous-dossier sae.</li>
     </ul>
 
-    <h3>Les erreurs trouvées dans la base</h3>
+    <h3>La charte graphique</h3>
     <ul>
-        <li>Le Cidre brut de Saint Lô est rangé dans la catégorie Poissons et fruits de mer.</li>
-        <li>Le client Le Gourmet a Paris comme ville mais le code postal 76001, et le même mail que La Parisienne.</li>
-        <li>Un client a écrit « paris » en minuscule.</li>
-        <li>La table DetailCommande n'a pas de clé primaire, donc il y a 7 lignes en double.</li>
-        <li>Certaines commandes ont des dates qui ne sont pas logiques, par exemple une date d'envoi avant la date de commande.</li>
-    </ul>
-    <p>Nous avons préféré signaler ces erreurs plutôt que de modifier la base. Il faut en tenir compte quand on lit les résultats.</p>
-
-    <h3>Nos conseils pour KDou</h3>
-    <ul>
-        <li>Corriger les erreurs dans la base et ajouter une clé primaire à DetailCommande.</li>
-        <li>Revoir l'offre de boissons : beaucoup ne se vendent pas, et celles qui se vendent le plus viennent souvent de loin.</li>
-        <li>Remplacer en priorité les produits hors UE les plus vendus par des produits français ou européens, pour réduire les transports.</li>
-        <li>Mieux suivre les clients partenaires qui ne commandent jamais.</li>
+        <li>Couleurs : vert foncé (darkgreen) pour le menu, l'en-tête, le pied de page et les titres, et beige pour le fond.</li>
+        <li>Police : Arial sur tout le site, pour que ce soit simple et lisible.</li>
+        <li>Le contenu de chaque page est dans un cadre blanc, pour qu'il ressorte sur le fond beige.</li>
+        <li>Les requêtes SQL sont dans des blocs gris (balise pre), pour les distinguer du texte.</li>
     </ul>
 
-    <h3>Le travail en groupe</h3>
-    <p>Nous avons tous fait la question 2.1 pour découvrir la base, puis chacun a pris une question de 2.2 à 2.5 et a proposé son propre indicateur. À la fin, nous avons mis nos résultats en commun dans ce site.</p>
+    <h3>La structure des pages</h3>
+    <ul>
+        <li>Chaque page a le même en-tête (header), le même menu (nav) et le même pied de page (footer). Seule la partie main change.</li>
+        <li>Le menu est fixé en haut de l'écran (position: fixed), pour pouvoir changer de page à tout moment.</li>
+        <li>Le pied de page reprend les liens vers toutes les pages et les noms des membres du groupe.</li>
+        <li>Nous avons utilisé des tableaux (table) pour les résultats et des images (img avec un alt) pour les captures Access.</li>
+    </ul>
+
+    <h3>Les outils utilisés</h3>
+    <ul>
+        <li>PhpStorm pour écrire le code HTML et CSS.</li>
+        <li>GitHub pour partager le site et GitHub Pages pour le mettre en ligne.</li>
+        <li>Le validateur du W3C (validator.w3.org) pour vérifier les pages.</li>
+    </ul>
+    <p>Nous avons seulement utilisé du HTML et du CSS, sans framework. La seule propriété que nous n'avions pas vue en cours est border-radius, qui sert à arrondir les coins des cadres et des boutons.</p>
 </main>
 
 <!-- a copier sur toutes les pages -->
