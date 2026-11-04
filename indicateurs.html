@@ -46,13 +46,22 @@
     <img src="images/2.3%20resultat.png" alt="Résultat du CA annuel desserts et boissons">
     <p>En 2021, les boissons font environ 913 374 € et les desserts 491 935 €, donc presque un tiers du CA total. Les boissons rapportent presque deux fois plus que les desserts. Il faut faire attention : 2021 est la seule année complète, car 2020 commence en juillet et 2022 n'a que 5 commandes.</p>
 
-    <!-- question 4 : Carlos, à compléter -->
+    <!-- question 4 : Carlos -->
     <h3>4) Dans une réflexion en lien avec l'offre commerciale : Calcul de l'indicateur nombre de produits carnés non commandés actuellement ?</h3>
-    <p>À compléter</p>
+    <p>Tout d'abord, on essaye d'afficher la colonne NomProd de la table Produit pour voir les noms des produits.</p>
+    <p>Ensuite, on utilise CodeCateg = 6 pour sélectionner uniquement les produits de la catégorie viande.</p>
+    <p>Après, on utilise RefProd pour vérifier que les références des produits de la table Produit ne sont pas présentes dans la colonne Réf produit de la table DetailCommande.</p>
+    <img src="images/carlos%20qst4.webp" alt="Requête et résultat de la question 4 : produits carnés non commandés">
+    <p>Pour finir, on obtient deux résultats : Terrine andouilloux et Pâté de campagne au pommeau.</p>
+    <p>Cela signifie qu'il y a 2 produits carnés qui ne sont actuellement pas commandés.</p>
 
-    <!-- question 5 : Roméo, à compléter -->
+    <!-- question 5 : Roméo -->
     <h3>5) Dans une réflexion sur le partenariat client : A-t-on des clients pilotes d'un réseau partenaire ayant autant de commandes que les clients partenaires ?</h3>
-    <p>À compléter</p>
+    <img src="images/roméo%20requete.png" alt="Requête de la question 5 dans Access">
+    <p>Cette requête permet de comparer le nombre de commandes effectuées par les clients pilotes et leurs clients partenaires. Elle identifie les couples de clients ayant passé exactement le même nombre de commandes. Cet indicateur peut aider KDou à mieux comprendre l'activité commerciale de son réseau de partenaires et à analyser les relations entre les différents clients.</p>
+    <img src="images/roméo.webp" alt="Résultat de la question 5 : clients pilotes et partenaires">
+    <p>On trouve un seul couple : le pilote Le Nostradamu et son partenaire Petite Épicerie ont tous les deux 17 commandes. Dans les autres réseaux, le pilote et ses partenaires n'ont pas le même nombre de commandes : certains partenaires commandent beaucoup plus que leur pilote, comme ChefFamilla (72 commandes contre 42 pour Chez Bouxou), et d'autres pas du tout, comme La Maison dans le Parc et Délices d'Agen (0 commande).</p>
+    <p>Le réseau de partenaires est donc déséquilibré. KDou pourrait s'appuyer sur les clients qui commandent le plus pour organiser les livraisons groupées, et relancer les partenaires qui ne commandent jamais.</p>
 </main>
 
 <!-- a copier sur toutes les pages -->

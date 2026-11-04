@@ -40,7 +40,7 @@
     <p><strong>Intérêt de la requête dans le contexte.</strong></p>
     <p>Un produit qui vient de l'autre bout du monde fait des milliers de kilomètres avant d'arriver, et ça pollue beaucoup. Si KDou sait d'où viennent ses produits, elle peut choisir plus de fournisseurs français ou européens et avoir une meilleure image écologique.</p>
 
-    <p><strong>Requête en SQL et explication de sa conception.</strong></p>
+    <p><strong>Requête en SQL (peut être faite en plusieurs étapes) et explication de sa conception.</strong></p>
     <p>Étape 1 : nombre de produits par pays.</p>
     <pre>
 SELECT Y.PaysFR, Y.UE, Count(*) AS NbProduits
@@ -96,7 +96,7 @@ GROUP BY Y.UE;
     <p><strong>Intérêt de la requête dans le contexte.</strong></p>
     <p>Cet indicateur permet à KDou de repérer les produits qui ne rencontrent aucun succès commercial. L'entreprise peut alors décider de mieux les promouvoir, de revoir leur prix ou de ne plus les proposer. Cela permettrait de mieux gérer son catalogue, de limiter les achats inutiles et de réduire le risque de gaspillage alimentaire.</p>
 
-    <p><strong>Requête en SQL et explication de sa conception.</strong></p>
+    <p><strong>Requête en SQL (peut être faite en plusieurs étapes) et explication de sa conception.</strong></p>
     <pre>
 SELECT P.RefProd, P.NomProd, C.NomCateg, P.CoutAchat
 FROM Produit AS P INNER JOIN Categorie AS C ON P.CodeCateg = C.CodeCateg
@@ -107,30 +107,46 @@ WHERE D.[Réf produit] = P.RefProd
 )
 ORDER BY C.NomCateg, P.NomProd;
 </pre>
-    <p>  <ul>
-    <li>SELECT : sélectionne la référence, le nom, la catégorie et le coût d'achat des produits.</li>
-    <li>FROM Produit AS P INNER JOIN Categorie AS C : récupère les informations dans la table des produits, reliée à la table des catégories pour avoir le nom de la catégorie.</li>
-    <li>NOT EXISTS : vérifie qu'aucune commande ne contient le produit concerné.</li>
-    <li>DetailCommande : contient les produits associés aux commandes.</li>
-    <li>[Réf produit] : le nom de la colonne est entre crochets car il contient un espace et un accent.</li>
-    <li>ORDER BY C.NomCateg, P.NomProd : classe les résultats par catégorie, puis par ordre alphabétique.</li>
-</ul>
-    </p>
+    <ul>
+        <li>SELECT : sélectionne la référence, le nom, la catégorie et le coût d'achat des produits.</li>
+        <li>FROM Produit AS P INNER JOIN Categorie AS C : récupère les informations dans la table des produits, reliée à la table des catégories pour avoir le nom de la catégorie.</li>
+        <li>NOT EXISTS : vérifie qu'aucune commande ne contient le produit concerné.</li>
+        <li>DetailCommande : contient les produits associés aux commandes.</li>
+        <li>[Réf produit] : le nom de la colonne est entre crochets car il contient un espace et un accent.</li>
+        <li>ORDER BY C.NomCateg, P.NomProd : classe les résultats par catégorie, puis par ordre alphabétique.</li>
+    </ul>
 
-    <p><strong>Résultat pertinent et lisible par les associés de KDou.</strong></p>
+    <p><strong>Résultat (ou un extrait) pertinent et lisible par les associés de KDou.</strong></p>
     <img src="images/Roméo%20resultat.png" alt="Résultat de l'indicateur de Roméo : produits jamais commandés">
-    <p>Le résultat affichera tous les produits qui n'apparaissent jamais dans les détails des commandes. Si la requête ne retourne aucun résultat, cela signifie que tous les produits du catalogue ont été commandés au moins une fois.</p>
+    <p>[Analyse du résultat, à écrire par Roméo]</p>
 
-    <!-- indicateur de Carlos : à compléter -->
-    <h3>Indicateur de Carlos</h3>
+    <!-- indicateur de Carlos -->
+    <h3>Indicateur de Carlos : les fournisseurs qui proposent le plus de produits</h3>
+
     <p><strong>Énoncé de la requête en langage naturel avec son objectif.</strong></p>
-    <p>À compléter</p>
+    <p>Cet indicateur permet de voir quels partenaires commerciaux proposent le plus de produits dans le catalogue de KDou.</p>
+
     <p><strong>Intérêt de la requête dans le contexte.</strong></p>
-    <p>À compléter</p>
-    <p><strong>Requête en SQL et explication de sa conception.</strong></p>
-    <p>À compléter</p>
-    <p><strong>Résultat pertinent et lisible par les associés de KDou.</strong></p>
-    <p>À compléter</p>
+    <p>Cette information peut être utile pour mieux connaître l'offre de l'entreprise, repérer les partenaires qui proposent une grande variété de produits et réfléchir aux relations à développer avec eux.</p>
+
+    <p><strong>Requête en SQL (peut être faite en plusieurs étapes) et explication de sa conception.</strong></p>
+    <pre>
+SELECT F.Societe, COUNT(P.RefProd) AS NombreProduits
+FROM Fournisseur AS F
+INNER JOIN Produit AS P ON F.NoFour = P.NoFour
+GROUP BY F.Societe
+ORDER BY COUNT(P.RefProd) DESC;
+</pre>
+    <ul>
+        <li>INNER JOIN : on relie la table Fournisseur et la table Produit grâce à NoFour, pour savoir quels produits sont proposés par chaque fournisseur.</li>
+        <li>GROUP BY F.Societe : on fait un groupe par fournisseur.</li>
+        <li>COUNT(P.RefProd) : on compte le nombre de produits dans chaque groupe, donc le nombre de produits de chaque fournisseur.</li>
+        <li>ORDER BY COUNT(P.RefProd) DESC : on trie du fournisseur qui a le plus de produits à celui qui en a le moins.</li>
+    </ul>
+
+    <p><strong>Résultat (ou un extrait) pertinent et lisible par les associés de KDou.</strong></p>
+    <img src="images/carlos%20indicateurr.webp" alt="Résultat de l'indicateur de Carlos : nombre de produits par fournisseur">
+    <p>Les résultats montrent que Savannah Bay Spices Co. propose le plus de produits dans le catalogue KDou, avec 10 produits. On peut donc dire que ce partenaire commercial contribue beaucoup à la diversité des produits proposés par l'entreprise.</p>
 
     <!-- indicateur d'Anes : à compléter -->
     <h3>Indicateur d'Anes</h3>
@@ -138,9 +154,9 @@ ORDER BY C.NomCateg, P.NomProd;
     <p>À compléter</p>
     <p><strong>Intérêt de la requête dans le contexte.</strong></p>
     <p>À compléter</p>
-    <p><strong>Requête en SQL et explication de sa conception.</strong></p>
+    <p><strong>Requête en SQL (peut être faite en plusieurs étapes) et explication de sa conception.</strong></p>
     <p>À compléter</p>
-    <p><strong>Résultat pertinent et lisible par les associés de KDou.</strong></p>
+    <p><strong>Résultat (ou un extrait) pertinent et lisible par les associés de KDou.</strong></p>
     <p>À compléter</p>
 </main>
 
