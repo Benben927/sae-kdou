@@ -59,7 +59,7 @@ GROUP BY Y.UE;
 </pre>
     <p>Pour que ce soit plus clair, j'ai refait la requête en regroupant juste avec la colonne UE (Membre ou Hors).</p>
 
-    <p><strong>Résultat pertinent et lisible par les associés de KDou.</strong></p>
+    <p><strong>Résultat (ou un extrait) pertinent et lisible par les associés de KDou.</strong></p>
     <img src="images/3%20resultat.png" alt="Résultat de l'indicateur : produits par pays">
     <table>
         <tr>
@@ -118,7 +118,10 @@ ORDER BY C.NomCateg, P.NomProd;
 
     <p><strong>Résultat (ou un extrait) pertinent et lisible par les associés de KDou.</strong></p>
     <img src="images/Roméo%20resultat.png" alt="Résultat de l'indicateur de Roméo : produits jamais commandés">
-    <p>[Analyse du résultat, à écrire par Roméo]</p>
+    <p>On trouve 32 produits qui n'ont jamais été commandés, sur les 109 produits du catalogue. Ça fait presque un produit sur trois (29 %) qui ne se vend pas du tout.</p>
+    <p>La catégorie la plus touchée est de loin les boissons : 23 produits sur les 32. Ça veut dire que 23 des 35 boissons du catalogue n'ont jamais été vendues. Les autres catégories n'ont que 1 ou 2 produits jamais commandés. On retrouve aussi le Cidre brut de Saint Lô, qui est rangé dans les poissons alors que c'est une boisson.</p>
+    <p>Certains de ces produits sont encore en stock, par exemple le knäckebrod Kala (61 unités), la Limonadystel (50) ou le LimoCoca (46). KDou a donc payé des produits qui restent dans son stock sans être vendus, avec un risque de gaspillage s'ils périment.</p>
+    <p>KDou devrait donc revoir surtout son offre de boissons : mieux les mettre en avant, baisser leur prix, ou arrêter d'en proposer certaines pour garder seulement celles qui se vendent.</p>
 
     <!-- indicateur de Carlos -->
     <h3>Indicateur de Carlos : les fournisseurs qui proposent le plus de produits</h3>
@@ -148,16 +151,62 @@ ORDER BY COUNT(P.RefProd) DESC;
     <img src="images/carlos%20indicateurr.webp" alt="Résultat de l'indicateur de Carlos : nombre de produits par fournisseur">
     <p>Les résultats montrent que Savannah Bay Spices Co. propose le plus de produits dans le catalogue KDou, avec 10 produits. On peut donc dire que ce partenaire commercial contribue beaucoup à la diversité des produits proposés par l'entreprise.</p>
 
-    <!-- indicateur d'Anes : à compléter -->
-    <h3>Indicateur d'Anes</h3>
+    <!-- indicateur d'Anes -->
+    <h3>Indicateur d'Anes : les produits hors UE les plus vendus</h3>
+
     <p><strong>Énoncé de la requête en langage naturel avec son objectif.</strong></p>
-    <p>À compléter</p>
+    <p>Quels sont les 10 produits venant de fournisseurs hors UE qui sont les plus vendus (en quantité) ? L'objectif est d'avoir une liste des produits à remplacer en priorité par des produits français ou européens.</p>
+
     <p><strong>Intérêt de la requête dans le contexte.</strong></p>
-    <p>À compléter</p>
+    <p>Tous les clients de KDou sont en France. Un produit hors UE très vendu fait beaucoup de transport, donc pollue beaucoup. Compter les quantités vendues (et pas juste les produits du catalogue) montre où KDou peut le plus réduire son impact et améliorer son image éco-responsable.</p>
+
     <p><strong>Requête en SQL (peut être faite en plusieurs étapes) et explication de sa conception.</strong></p>
-    <p>À compléter</p>
+    <p>Étape 1 : les 10 produits hors UE les plus vendus.</p>
+    <pre>
+SELECT TOP 10 P.NomProd, Y.PaysFR, Sum(D.Quantité) AS QteVendue
+FROM ((DetailSansDoublon AS D INNER JOIN Produit AS P ON D.[Réf produit] = P.RefProd)
+INNER JOIN Fournisseur AS F ON P.NoFour = F.NoFour)
+INNER JOIN Pays AS Y ON F.NoPays = Y.NoPays
+WHERE Y.UE = "Hors"
+GROUP BY P.NomProd, Y.PaysFR
+ORDER BY 3 DESC;
+</pre>
+    <ul>
+        <li>On part de DetailSansDoublon, qui contient les quantités vendues sans les lignes en double.</li>
+        <li>On fait une jointure avec Produit, puis Fournisseur, puis Pays pour connaître le pays de chaque produit vendu.</li>
+        <li>WHERE Y.UE = "Hors" : on garde seulement les produits des fournisseurs hors UE.</li>
+        <li>GROUP BY et Sum : on additionne les quantités vendues pour chaque produit.</li>
+        <li>ORDER BY 3 DESC avec TOP 10 : on trie du plus vendu au moins vendu et on garde les 10 premiers.</li>
+    </ul>
+    <p>Étape 2 : part des quantités vendues UE ou hors UE.</p>
+    <pre>
+SELECT Y.UE, Sum(D.Quantité) AS QteVendue
+FROM ((DetailSansDoublon AS D INNER JOIN Produit AS P ON D.[Réf produit] = P.RefProd)
+INNER JOIN Fournisseur AS F ON P.NoFour = F.NoFour)
+INNER JOIN Pays AS Y ON F.NoPays = Y.NoPays
+GROUP BY Y.UE;
+</pre>
+
     <p><strong>Résultat (ou un extrait) pertinent et lisible par les associés de KDou.</strong></p>
-    <p>À compléter</p>
+    <table>
+        <tr>
+            <th>Produit</th>
+            <th>Pays</th>
+            <th>Quantité vendue</th>
+        </tr>
+        <tr><td>Guaraná Fantástica</td><td>Brésil</td><td>1 575</td></tr>
+        <tr><td>Jack's New England Clam Chowder</td><td>États-Unis</td><td>1 362</td></tr>
+        <tr><td>Pavlova</td><td>Australie</td><td>1 355</td></tr>
+        <tr><td>Chang</td><td>Japon</td><td>1 346</td></tr>
+        <tr><td>Sugar Pie</td><td>Canada</td><td>1 291</td></tr>
+        <tr><td>Sir Rodney's Scones</td><td>Royaume-Uni</td><td>1 235</td></tr>
+        <tr><td>Fløtemysost</td><td>Norvège</td><td>1 221</td></tr>
+        <tr><td>Chai</td><td>Japon</td><td>1 211</td></tr>
+        <tr><td>Steeleye Stout</td><td>États-Unis</td><td>1 115</td></tr>
+        <tr><td>Manjimup Dried Apples</td><td>Australie</td><td>1 099</td></tr>
+    </table>
+    <p>Sur 62 910 unités vendues, 34 072 viennent de fournisseurs hors UE, soit 54 %. Plus de la moitié de ce que KDou vend vient donc de l'extérieur de l'UE.</p>
+    <p>Les produits les plus vendus viennent de très loin (Brésil, Australie, Japon, États-Unis). Ce sont surtout des boissons, des desserts et des biscuits, qu'on peut facilement remplacer par des produits français ou européens : jus et limonades, gâteaux, biscuits, bières. KDou pourrait commencer par ces 10 produits pour réduire le transport.</p>
 </main>
 
 <!-- a copier sur toutes les pages -->

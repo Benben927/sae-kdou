@@ -30,9 +30,43 @@
 <main>
     <h2>Les requêtes/indicateurs de 2 à 5</h2>
 
-    <!-- question 2 : Anes, à compléter -->
+    <!-- question 2 : Anes -->
     <h3>2) Dans une réflexion en lien avec l'origine de ses produits : On veut comme indicateur le CA total généré à ce jour avec les fournisseurs de l'UE ?</h3>
-    <p>À compléter</p>
+    <p>Le chiffre d'affaires d'une ligne de commande est le prix de vente : quantité × coût d'achat × coefficient de marge × (1 − remise). Les frais de port ne sont pas comptés.</p>
+    <p>On utilise la requête DetailSansDoublon (faite à la question 3) pour ne pas compter deux fois les 7 lignes en double.</p>
+    <pre>
+SELECT Sum(D.Quantité * P.CoutAchat * C.CoefMarge * (1 - D.[Remise (%)])) AS CA_UE
+FROM (((DetailSansDoublon AS D INNER JOIN Produit AS P ON D.[Réf produit] = P.RefProd)
+INNER JOIN Categorie AS C ON P.CodeCateg = C.CodeCateg)
+INNER JOIN Fournisseur AS F ON P.NoFour = F.NoFour)
+INNER JOIN Pays AS Y ON F.NoPays = Y.NoPays
+WHERE Y.UE = "Membre";
+</pre>
+    <p>Le pays n'est pas dans la table Produit : on fait une jointure avec Fournisseur, puis avec Pays, pour savoir si le fournisseur est dans l'UE (colonne UE = "Membre"). On fait aussi une jointure avec Categorie pour avoir le coefficient de marge. Le Sum additionne le CA de toutes les lignes gardées.</p>
+    <p>Pour comparer, on peut refaire la requête sans le WHERE et avec GROUP BY Y.UE :</p>
+    <table>
+        <tr>
+            <th>Fournisseurs</th>
+            <th>CA total (€)</th>
+            <th>Part du CA</th>
+        </tr>
+        <tr>
+            <td>UE (Membre)</td>
+            <td>2 752 343,81</td>
+            <td>55,5 %</td>
+        </tr>
+        <tr>
+            <td>Hors UE</td>
+            <td>2 207 475,99</td>
+            <td>44,5 %</td>
+        </tr>
+        <tr>
+            <td>Total</td>
+            <td>4 959 819,79</td>
+            <td>100 %</td>
+        </tr>
+    </table>
+    <p>Le CA réalisé à ce jour avec les fournisseurs de l'UE est d'environ 2 752 344 €, soit 55,5 % du CA total. Presque la moitié des ventes (44,5 %) vient donc de produits achetés hors UE, souvent très loin. Pour une image plus éco-responsable, KDou peut augmenter la part des fournisseurs de l'UE, et surtout des fournisseurs français.</p>
 
     <!-- question 3 : Benamer -->
     <h3>3) Dans une réflexion en lien avec la santé : On veut comme indicateur le chiffre d'affaire généré (montant total des ventes) annuel pour les catégories desserts ou boissons.</h3>
